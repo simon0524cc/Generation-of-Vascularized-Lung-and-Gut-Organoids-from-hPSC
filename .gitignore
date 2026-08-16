@@ -1,0 +1,32 @@
+# Local system files
+.DS_Store
+
+# Raw sequencing data (> 50 MB, download from GEO instead)
+data/raw/*.h5
+
+# Analysis products (regenerate by running the pipeline; see README)
+outputs/
+*.rds
+*.h5ad
+
+# Raw sequencing reads (if ever present)
+*.fastq
+*.fastq.gz
+*.bam
+*.bai
+
+# R session / environment
+.Rhistory
+.RData
+.Rproj.user/
+.Ruserdata
+Rplots.pdf
+
+# renv library (renv.lock and renv/activate.R ARE committed)
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/sandbox/
+renv/staging/
