@@ -1,0 +1,8 @@
+sample_id,gsm,h5_file,stage,organoid_model
+Day3_B1,GSM7978632,GSM7978632_Day3_B1_filtered_feature_bc_matrix.h5,Day 3,vHLPO
+Day3_B3,GSM7978634,GSM7978634_Day3_B3_filtered_feature_bc_matrix.h5,Day 3,vHIO
+Day7_vAFG_B1,GSM7978636,GSM7978636_Day7_vAFG_B1_filtered_feature_bc_matrix.h5,Day 7,vHLPO
+Day7_vMHG_B3,GSM7978639,GSM7978639_Day7_vMHG_B3_filtered_feature_bc_matrix.h5,Day 7,vHIO
+Day21_vHLPO,GSM7978640,GSM7978640_Day21_vHLPO_filtered_feature_bc_matrix.h5,Day 21,vHLPO
+Day21_vHIO,GSM7978641,GSM7978641_Day21_vHIO_filtered_feature_bc_matrix.h5,Day 21,vHIO
+Day21_vHCO,GSM7978642,GSM7978642_Day21_vHCO_filtered_feature_bc_matrix.h5,Day 21,vHCO
