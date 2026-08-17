@@ -124,4 +124,3 @@ This code is released under the MIT license (see `LICENSE`).
 If you use this code, please cite the associated paper (*Co-development of
 mesoderm and endoderm lineages*, Miao et al., Cell, 2025) and the Zenodo
 archive of this repository (https://doi.org/10.5281/zenodo.21966164).
-
