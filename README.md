@@ -1,4 +1,4 @@
-# vHIO_vHLPO_scRNAseq Analysis
+# vHIO_vHLPO_scRNAseq
 
 Single-cell RNA-seq analysis of vascularized human intestinal organoids
 (vHIO / vHCO) and vascularized human lung organoids (vHLPO) at days 3, 7
@@ -67,33 +67,48 @@ seven samples. The samples belong to two organoid projects:
 | vHLPO (vascularized human lung organoids) | `Day3_B1`, `Day7_vAFG_B1`, `Day21_vHLPO` |
 | vHIO / vHCO (vascularized human intestinal organoids) | `Day3_B3`, `Day7_vMHG_B3`, `Day21_vHIO`, `Day21_vHCO` |
 
-```bash
-Rscript scripts/01_preprocessing.R    # QC, cell-cycle scoring, SCTransform
-Rscript scripts/02_clustering.R       # PCA, UMAP, Leiden clustering, markers
-Rscript scripts/03_annotation.R       # cell-type annotation
-Rscript scripts/04_plotting.R         # paper figures and proportion tables
+```text
+1. Preprocess raw matrices
+   Rscript scripts/01_preprocessing.R
+        ↓
+   QC filtering, cell-cycle scoring, SCTransform
+        ↓
+2. Cluster cells and export markers
+   Rscript scripts/02_clustering.R
+        ↓
+   PCA, UMAP, Leiden clustering, FindAllMarkers
+        ↓
+3. Annotate cell types
+   Rscript scripts/03_annotation.R
+        ↓
+   Cell-type annotation (incl. Day 21 refinements)
+        ↓
+4. Produce the manuscript figures
+   Rscript scripts/04_plotting.R
+        │
+        ├─ 1) Annotated UMAP (DimPlot, group.by = "Cell_Type_annotation")
+        │        → outputs/<sample_id>/figures/UMAP_CellType.pdf
+        │          Figure 5a,b,c (vHLPO: 5a Day3_B1, 5b Day7_vAFG_B1,
+        │                       5c Day21_vHLPO)
+        │          Figure 6a,b,c,d (vHIO/vHCO: 6a Day3_B3, 6b Day7_vMHG_B3,
+        │                          6c Day21_vHIO, 6d Day21_vHCO)
+        ├─ 2) Grayscale dot plot (DotPlot)
+        │        → outputs/<sample_id>/figures/DotPlot_Grayscale_PaperStyle.pdf
+        │          Figure 5e,f,g (vHLPO: 5e Day3_B1, 5f Day7_vAFG_B1,
+        │                       5g Day21_vHLPO)
+        │          Figure 6F,G,H,I (vHIO/vHCO: 6F Day3_B3, 6G Day7_vMHG_B3,
+        │                          6H Day21_vHIO, 6I Day21_vHCO)
+        └─ 3) Cell-type proportions table
+                 → outputs/<sample_id>/tables/Cell_Proportions_<sample_id>.csv
+                   Figure 5d (vHLPO); Figure 6e (vHIO/vHCO)
 ```
 
 Each script writes a checkpoint rds under `outputs/<sample_id>/seurat_obj/`,
-so the pipeline can be restarted from any module.
-
-### Reproducing the manuscript figures
-
-All manuscript figures are produced by `scripts/04_plotting.R`:
-
-| Manuscript figure | `04_plotting.R` section | Output file |
-|---|---|---|
-| UMAPs, Figure 5a,b,d (vHLPO samples: `Day3_B1`, `Day7_vAFG_B1`, `Day21_vHLPO`) | 1. Annotated UMAP (`DimPlot`, `group.by = "Cell_Type_annotation"`) | `outputs/<sample_id>/figures/UMAP_CellType.pdf` |
-| UMAPs, Figure 6a–d (vHIO/vHCO samples: `Day3_B3`, `Day7_vMHG_B3`, `Day21_vHIO`, `Day21_vHCO`) | 1. Annotated UMAP | `outputs/<sample_id>/figures/UMAP_CellType.pdf` |
-| Cell-type proportions, Figure 5d and Figure 6e | 3. Cell-type proportions table | `outputs/<sample_id>/tables/Cell_Proportions_<sample_id>.csv` |
-| Dot plots, Figure 5e–g and Figure 6F–I | 2. Grayscale dot plot (`DotPlot`) | `outputs/<sample_id>/figures/DotPlot_Grayscale_PaperStyle.pdf` |
-| SMC / pericyte feature plots (Day 21 vHIO and vHCO) | 4. SMC / pericyte feature plot | `outputs/<sample_id>/figures/Featureplot_SMC_pericyte.pdf` |
-
-Marker genes shown in the dot plots, the cell-type color maps and the
-cell-type orders are defined per sample in `scripts/00_config.R`
-(`paper_markers` / `dotplot_markers`, `my_colors`, `cell_order`,
-`dotplot_order`). Positive cluster markers exported by
-`scripts/02_clustering.R` are written to
+so the pipeline can be restarted from any module. Marker genes shown in
+the dot plots, the cell-type color maps and the cell-type orders are
+defined per sample in `scripts/00_config.R` (`paper_markers` /
+`dotplot_markers`, `my_colors`, `cell_order`, `dotplot_order`); positive
+cluster markers are exported by `02_clustering.R` to
 `outputs/<sample_id>/tables/Markers_Leiden_Res<res>.csv`.
 
 ## Data availability
