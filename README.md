@@ -1,4 +1,4 @@
-# vHIO_vHLPO_scRNAseq
+# vHIO_vHLPO_scRNAseq Analysis
 
 Single-cell RNA-seq analysis of vascularized human intestinal organoids
 (vHIO / vHCO) and vascularized human lung organoids (vHLPO) at days 3, 7
@@ -60,21 +60,41 @@ renv::restore()   # run from the repository root
 
 Run the scripts in order; each script supports an optional comma-separated
 sample list (`Rscript scripts/0X.R Day3_B1,Day3_B3`) and defaults to all
-seven samples. Sample IDs: `Day3_B1`, `Day3_B3`, `Day7_vAFG_B1`,
-`Day7_vMHG_B3`, `Day21_vHLPO`, `Day21_vHIO`, `Day21_vHCO`.
+seven samples. The samples belong to two organoid projects:
+
+| Project | Samples |
+|---|---|
+| vHLPO (vascularized human lung organoids) | `Day3_B1`, `Day7_vAFG_B1`, `Day21_vHLPO` |
+| vHIO / vHCO (vascularized human intestinal organoids) | `Day3_B3`, `Day7_vMHG_B3`, `Day21_vHIO`, `Day21_vHCO` |
 
 ```bash
-Rscript scripts/01_preprocessing.R    # ~1 h total, depending on hardware
-Rscript scripts/02_clustering.R       # resolution scan + marker export
+Rscript scripts/01_preprocessing.R    # QC, cell-cycle scoring, SCTransform
+Rscript scripts/02_clustering.R       # PCA, UMAP, Leiden clustering, markers
 Rscript scripts/03_annotation.R       # cell-type annotation
-Rscript scripts/04_plotting.R         # final figures and tables
+Rscript scripts/04_plotting.R         # paper figures and proportion tables
 ```
 
 Each script writes a checkpoint rds under `outputs/<sample_id>/seurat_obj/`,
-so the pipeline can be restarted from any module. Expected products per
-sample: resolution-scan UMAPs, marker CSVs, an annotated UMAP
-(`UMAP_CellType.pdf`), a grayscale dot plot
-(`DotPlot_Grayscale_PaperStyle.pdf`) and a cell-proportion table.
+so the pipeline can be restarted from any module.
+
+### Reproducing the manuscript figures
+
+All manuscript figures are produced by `scripts/04_plotting.R`:
+
+| Manuscript figure | `04_plotting.R` section | Output file |
+|---|---|---|
+| UMAPs, Figure 5a,b,d (vHLPO samples: `Day3_B1`, `Day7_vAFG_B1`, `Day21_vHLPO`) | 1. Annotated UMAP (`DimPlot`, `group.by = "Cell_Type_annotation"`) | `outputs/<sample_id>/figures/UMAP_CellType.pdf` |
+| UMAPs, Figure 6a–d (vHIO/vHCO samples: `Day3_B3`, `Day7_vMHG_B3`, `Day21_vHIO`, `Day21_vHCO`) | 1. Annotated UMAP | `outputs/<sample_id>/figures/UMAP_CellType.pdf` |
+| Cell-type proportions, Figure 5d and Figure 6e | 3. Cell-type proportions table | `outputs/<sample_id>/tables/Cell_Proportions_<sample_id>.csv` |
+| Dot plots, Figure 5e–g and Figure 6F–I | 2. Grayscale dot plot (`DotPlot`) | `outputs/<sample_id>/figures/DotPlot_Grayscale_PaperStyle.pdf` |
+| SMC / pericyte feature plots (Day 21 vHIO and vHCO) | 4. SMC / pericyte feature plot | `outputs/<sample_id>/figures/Featureplot_SMC_pericyte.pdf` |
+
+Marker genes shown in the dot plots, the cell-type color maps and the
+cell-type orders are defined per sample in `scripts/00_config.R`
+(`paper_markers` / `dotplot_markers`, `my_colors`, `cell_order`,
+`dotplot_order`). Positive cluster markers exported by
+`scripts/02_clustering.R` are written to
+`outputs/<sample_id>/tables/Markers_Leiden_Res<res>.csv`.
 
 ## Data availability
 
@@ -90,15 +110,10 @@ size limits.
 
 ## Code availability
 
-This repository is archived on Zenodo with DOI **10.5281/zenodo.XXXXXXX**
-(placeholder — replace after archiving). To obtain a DOI:
-
-1. Push this repository to GitHub.
-2. Connect the repository at https://zenodo.org/account/settings/github/
-   and enable archiving.
-3. Create a release; Zenodo archives it and issues a DOI. Update the DOI
-   here and cite both the GitHub repository and the Zenodo record in the
-   references of the manuscript.
+This repository is archived on Zenodo with DOI
+**10.5281/zenodo.21966164** (https://doi.org/10.5281/zenodo.21966164).
+Please cite both the GitHub repository and the Zenodo record in the
+references of the manuscript.
 
 ## License
 
@@ -106,5 +121,7 @@ This code is released under the MIT license (see `LICENSE`).
 
 ## Citation
 
-If you use this code, please cite the associated paper and the Zenodo
-archive of this repository.
+If you use this code, please cite the associated paper (*Co-development of
+mesoderm and endoderm lineages*, Miao et al., Cell, 2025) and the Zenodo
+archive of this repository (https://doi.org/10.5281/zenodo.21966164).
+
